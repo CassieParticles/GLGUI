@@ -68,7 +68,7 @@ public class Program {
         GL46.glUseProgram(programId);
     }
 
-    public void unlinkProgram(){
+    public void detachProgram(){
         GL46.glUseProgram(0);
     }
 

@@ -1,5 +1,7 @@
 package rendering;
 
+import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.lwjgl.opengl.GL46;
 import org.lwjgl.system.MemoryUtil;
 
@@ -8,11 +10,11 @@ import java.nio.IntBuffer;
 
 public class Mesh {
 
-    private int vaoId;
-    private int vertexVboId;
-    private int indexVboId;
+    protected int vaoId;
+    protected int vertexVboId;
+    protected int indexVboId;
 
-    private int vertexCount;
+    protected int vertexCount;
 
     public Mesh(float[] vertices, int[] indices){
         vertexCount=indices.length;
@@ -45,24 +47,17 @@ public class Mesh {
             }if(indicesBuffer!=null){
                 MemoryUtil.memFree(indicesBuffer);
             }
+            GL46.glBindVertexArray(0);
         }
     }
 
 
-    public void render(rendering.Program program){
-        program.useProgram();
-
+    public void render(Program program, Vector2f screenSize){
         GL46.glBindVertexArray(getVaoId());
-
         GL46.glEnableVertexAttribArray(0);
-
         GL46.glDrawElements(GL46.GL_TRIANGLES, getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
-
         GL46.glDisableVertexAttribArray(0);
-
         GL46.glBindVertexArray(0);
-
-        program.detachProgram();
     }
 
 
