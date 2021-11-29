@@ -51,11 +51,11 @@ public class Texture2D {
         return id;
     }
 
-    public int getWidth(){
+    public int getWidth(){  //Returns width, in pixels
         return width;
     }
 
-    public int getHeight(){
+    public int getHeight(){ //Returns height in pixels
         return height;
     }
 

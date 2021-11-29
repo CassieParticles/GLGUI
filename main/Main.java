@@ -1,5 +1,6 @@
 package main;
 
+import GUIObjects.TextGUI;
 import GUIObjects.TextureGUI;
 import GUIObjects.RectangleGUI;
 import org.joml.Vector2f;
@@ -20,11 +21,9 @@ public class Main {
     private Timer timer;
     private Input input;
 
-    private Program testProgram1;
-    private RectangleGUI mesh;
-
     private Program testProgram2;
-    private TextureGUI textureMesh;
+    private TextGUI testText1;
+    private TextGUI testText2;
 
     public static void main(String[] args){
         new Main().gameLoop();
@@ -49,21 +48,6 @@ public class Main {
         window.init();
         input.init(window);
 
-
-
-        testProgram1 =new Program();
-        testProgram1.attachShaders(new Shader[]{
-                new Shader(FileHandling.loadResource("src/shaders/rectangle/vertex.glsl"),GL46.GL_VERTEX_SHADER),
-                new Shader(FileHandling.loadResource("src/shaders/rectangle/fragment.glsl"),GL46.GL_FRAGMENT_SHADER)
-        });
-        testProgram1.link();
-        testProgram1.createUniform("translation");
-        testProgram1.createUniform("scale");
-        testProgram1.createUniform("screenSize");
-        testProgram1.createUniform("colour");
-
-        mesh=new RectangleGUI(new Vector2f(0,0),new Vector2f(200,200),new Vector3f(1,0,0));
-
         testProgram2=new Program();
         testProgram2.attachShaders(new Shader[]{
                 new Shader(FileHandling.loadResource("src/shaders/texture/vertex.glsl"),GL46.GL_VERTEX_SHADER),
@@ -75,7 +59,8 @@ public class Main {
         testProgram2.createUniform("screenSize");
         testProgram2.createUniform("textureSampler");
 
-        textureMesh=new TextureGUI(new Vector2f(0,0),new Vector2f(200,200),"src/testFiles/sus.png");
+        testText1=new TextGUI(new Vector2f(0,0),new Vector2f(1,1),"Question?",15,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
+        testText2=new TextGUI(new Vector2f(0,-10),new Vector2f(1,1),"Answer!",15,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
 
         GL46.glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
         window.loop();
@@ -85,8 +70,8 @@ public class Main {
         window.loop();
         GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
         testProgram2.useProgram();
-        textureMesh.render(testProgram2,new Vector2f(window.getWidth(),window.getHeight()));
-        mesh.render(testProgram1,new Vector2f(window.getWidth(),window.getHeight()));
+        testText1.render(testProgram2,new Vector2f(window.getWidth(),window.getHeight()));
+        testText2.render(testProgram2,new Vector2f(window.getWidth(),window.getHeight()));
         testProgram2.detachProgram();
     }
 
@@ -110,11 +95,9 @@ public class Main {
     public void cleanup(){
         System.out.println("Cleaning up");
 
-        testProgram1.cleanup();
-        mesh.cleanup();
-
         testProgram2.cleanup();
-        textureMesh.cleanup();
+        testText1.cleanup();
+        testText2.cleanup();
 
         window.cleanup();
     }
