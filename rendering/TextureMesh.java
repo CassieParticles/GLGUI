@@ -3,6 +3,7 @@ package rendering;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL46;
 import org.lwjgl.system.MemoryUtil;
+import utils.FileHandling;
 
 import java.nio.FloatBuffer;
 
@@ -10,8 +11,12 @@ public class TextureMesh extends Mesh{
     private int textureVboId;
     private int textureId;
 
-    public TextureMesh(float[] vertices, int[] indices,float[] textureCoords, int textureId) {
+
+
+    public TextureMesh(float[] vertices, int[] indices,float[] textureCoords, int textureId){
         super(vertices, indices);
+
+
         this.textureId=textureId;
         FloatBuffer textureBuffer=null;
         try{
@@ -33,13 +38,11 @@ public class TextureMesh extends Mesh{
     }
 
     @Override
-    public void render(Program program, Vector2f screenSize){
+    public void render( Vector2f screenSize){
 
         GL46.glActiveTexture(GL46.GL_TEXTURE0);
         GL46.glBindTexture(GL46.GL_TEXTURE_2D,textureId);
 
-        program.setUniform("screenSize",screenSize);
-        program.setUniform("textureSampler",0);
         GL46.glBindVertexArray(getVaoId());
         GL46.glEnableVertexAttribArray(0);
         GL46.glEnableVertexAttribArray(1);
@@ -47,5 +50,12 @@ public class TextureMesh extends Mesh{
         GL46.glDisableVertexAttribArray(0);
         GL46.glDisableVertexAttribArray(1);
         GL46.glBindVertexArray(0);
+    }
+
+    @Override
+    public void cleanup(){
+
+        GL46.glDeleteBuffers(textureVboId);
+        super.cleanup();
     }
 }

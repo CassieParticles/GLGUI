@@ -1,10 +1,9 @@
 package GUIObjects;
 
 import org.joml.Vector2f;
-import rendering.Program;
-import rendering.RectangleMesh;
-import rendering.Texture2D;
-import rendering.TextureMesh;
+import org.lwjgl.opengl.GL46;
+import rendering.*;
+import utils.FileHandling;
 
 public class TextureGUI extends GUI{
     private static float[] vertices=new float[]{0,1,
@@ -24,10 +23,24 @@ public class TextureGUI extends GUI{
 
     private final Texture2D texture;
     private final TextureMesh mesh;
-    public TextureGUI(Vector2f position, Vector2f size, Texture2D image) {
+    private static Program program=null;
+    public TextureGUI(Vector2f position, Vector2f size, Texture2D image) throws Exception {
         super(position, size);
         this.texture=image;
         mesh=new TextureMesh(vertices,indices,textCoords,image.getId());
+
+        if(program==null){
+            program=new Program();
+            program.attachShaders(new Shader[]{
+                    new Shader(FileHandling.loadResource("src/shaders/texture/vertex.glsl"), GL46.GL_VERTEX_SHADER),
+                    new Shader(FileHandling.loadResource("src/shaders/texture/fragment.glsl"),GL46.GL_FRAGMENT_SHADER)
+            });
+            program.link();
+            program.createUniform("translation");
+            program.createUniform("scale");
+            program.createUniform("screenSize");
+            program.createUniform("textureSampler");
+        }
     }
 
     public TextureGUI(Vector2f position, Vector2f size, String path) throws Exception {
@@ -39,14 +52,20 @@ public class TextureGUI extends GUI{
     }
 
     @Override
-    public void render(Program program, Vector2f screenSize){
-        super.render(program,screenSize);
-        mesh.render(program, screenSize);
+    public void render(Vector2f screenSize){
+        super.render(screenSize);
+        program.setUniform("screenSize",screenSize);
+        program.setUniform("textureSampler",0);
+        mesh.render(screenSize);
     }
 
     @Override
     public void cleanup(){
         mesh.cleanup();
         texture.cleanup();
+        if(program!=null){
+            program.cleanup();
+            program=null;
+        }
     }
 }

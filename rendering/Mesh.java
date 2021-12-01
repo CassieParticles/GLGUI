@@ -52,7 +52,7 @@ public class Mesh {
     }
 
 
-    public void render(Program program, Vector2f screenSize){
+    public void render(Vector2f screenSize){
         GL46.glBindVertexArray(getVaoId());
         GL46.glEnableVertexAttribArray(0);
         GL46.glDrawElements(GL46.GL_TRIANGLES, getVertexCount(), GL46.GL_UNSIGNED_INT, 0);

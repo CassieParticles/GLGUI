@@ -30,10 +30,8 @@ public class GUI {
         return size;
     }
 
-    public void render(Program program,Vector2f screenSize){
-        program.setUniform("screenSize",screenSize);
-        program.setUniform("translation",position);
-        program.setUniform("scale",size);
+    public void render(Vector2f screenSize){
+
     }
 
     public void cleanup(){

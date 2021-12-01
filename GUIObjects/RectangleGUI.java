@@ -3,27 +3,43 @@ package GUIObjects;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL46;
 import rendering.Mesh;
 import rendering.Program;
 import rendering.RectangleMesh;
+import rendering.Shader;
 
 public class RectangleGUI extends GUI{
 
-
-    private static final RectangleMesh mesh=new RectangleMesh(new float[]{
-            0,1,
-            1,1,
-            1,0,
-            0,0
-    },new int[]{
-            0,1,2,
-            0,2,3
-    });
+    private static Program program = null;
+    private static RectangleMesh mesh = null;   //Move all programs to GUI rather then meshes, to allow them to be passed down easier
 
     private final Vector3f colour;
 
-    public RectangleGUI(Vector2f position,Vector2f size, Vector3f colour){
+    public RectangleGUI(Vector2f position,Vector2f size, Vector3f colour) throws Exception{
         super(position,size);
+        mesh=new RectangleMesh(new float[]{
+                0,1,
+                1,1,
+                1,0,
+                0,0
+        },new int[]{
+                0,1,2,
+                0,2,3
+        });
+        if(program==null){
+            program=new Program();
+            program.attachShaders(new Shader[]{
+                    new Shader("src/shaders/rectangle/vertex.glsl", GL46.GL_VERTEX_SHADER),
+                    new Shader("src/shader/rectangle/fragment.glsl",GL46.GL_FRAGMENT_SHADER)
+            });
+            program.link();
+            program.createUniform("screenSize");
+            program.createUniform("translation");
+            program.createUniform("scale");
+            program.createUniform("colour");
+        }
+
         this.colour=colour;
     }
 
@@ -36,14 +52,21 @@ public class RectangleGUI extends GUI{
     }
 
     @Override
-    public void render(Program program, Vector2f screenSize){
+    public void render( Vector2f screenSize){
+        program.setUniform("screenSize",screenSize);
+        program.setUniform("translation",position);
+        program.setUniform("scale",size);
         program.setUniform("colour",colour);
-        super.render(program,screenSize);
-        mesh.render(program,screenSize);
+        super.render(screenSize);
+        mesh.render(screenSize);
     }
 
     @Override
     public void cleanup() {
+        if(program!=null){
+            program.cleanup();
+            program=null;
+        }
         mesh.cleanup();
     }
 }

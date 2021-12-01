@@ -17,7 +17,7 @@ public class TextGUI extends GUI{
         generateText();
     }
 
-    public void generateText(){
+    public void generateText() throws Exception {
         if(characters!=null){
             for(CharacterGUI c:characters){
                 c.cleanup();
@@ -31,11 +31,21 @@ public class TextGUI extends GUI{
             currentPos+=font.getCharacterWidth(string.toCharArray()[i]);
         }
     }
+
+    public void changeText(String newText){
+        if(!newText.equalsIgnoreCase(string)){
+            string=newText;
+        }
+    }
+
+    public String getString(){
+        return string;
+    }
+
     @Override
-    public void render(Program program,Vector2f screenSize){
-        super.render(program, screenSize);
+    public void render(Vector2f screenSize){
         for(CharacterGUI c : characters){
-            c.render(program, screenSize);
+            c.render( screenSize);
         }
     }
 

@@ -21,7 +21,6 @@ public class Main {
     private Timer timer;
     private Input input;
 
-    private Program testProgram2;
     private TextGUI testText1;
     private TextGUI testText2;
 
@@ -48,19 +47,8 @@ public class Main {
         window.init();
         input.init(window);
 
-        testProgram2=new Program();
-        testProgram2.attachShaders(new Shader[]{
-                new Shader(FileHandling.loadResource("src/shaders/texture/vertex.glsl"),GL46.GL_VERTEX_SHADER),
-                new Shader(FileHandling.loadResource("src/shaders/texture/fragment.glsl"),GL46.GL_FRAGMENT_SHADER)
-        });
-        testProgram2.link();
-        testProgram2.createUniform("translation");
-        testProgram2.createUniform("scale");
-        testProgram2.createUniform("screenSize");
-        testProgram2.createUniform("textureSampler");
-
         testText1=new TextGUI(new Vector2f(0,0),new Vector2f(1,1),"Question?",15,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
-        testText2=new TextGUI(new Vector2f(0,-10),new Vector2f(1,1),"Answer!",15,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
+        testText2=new TextGUI(new Vector2f(0,-25),new Vector2f(1,1),"Answer!",15,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
 
         GL46.glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
         window.loop();
@@ -69,10 +57,8 @@ public class Main {
     private void render(){
         window.loop();
         GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
-        testProgram2.useProgram();
-        testText1.render(testProgram2,new Vector2f(window.getWidth(),window.getHeight()));
-        testText2.render(testProgram2,new Vector2f(window.getWidth(),window.getHeight()));
-        testProgram2.detachProgram();
+        testText1.render(new Vector2f(window.getWidth(),window.getHeight()));
+        testText2.render(new Vector2f(window.getWidth(),window.getHeight()));
     }
 
     private void update(){
@@ -95,7 +81,6 @@ public class Main {
     public void cleanup(){
         System.out.println("Cleaning up");
 
-        testProgram2.cleanup();
         testText1.cleanup();
         testText2.cleanup();
 
