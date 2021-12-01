@@ -1,4 +1,4 @@
-package GUIObjects;
+package guiObjects;
 
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL46;

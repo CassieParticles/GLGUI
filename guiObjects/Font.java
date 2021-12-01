@@ -1,4 +1,4 @@
-package GUIObjects;
+package guiObjects;
 
 import rendering.Texture2D;
 import utils.FileHandling;

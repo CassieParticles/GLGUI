@@ -7,6 +7,7 @@ public class Input {
     private boolean[] keys=new boolean[GLFW.GLFW_KEY_LAST];
     private boolean[] keysAllreadyPressed=new boolean[GLFW.GLFW_KEY_LAST];
     private boolean[] mouseButtons=new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
+    private boolean[] mouseButtonsAllreadyPressed=new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 
     private int mouseX;
     private int mouseY;
@@ -30,9 +31,8 @@ public class Input {
     }
 
     public void updateInputs(){
-        for(int i=0;i<keys.length;i++){
-            keysAllreadyPressed[i]=keys[i];
-        }
+        System.arraycopy(keys, 0, keysAllreadyPressed, 0, keys.length);
+        System.arraycopy(mouseButtons,0,mouseButtonsAllreadyPressed,0,mouseButtons.length);
     }
 
     public boolean isKeyDown(int key){
@@ -45,6 +45,10 @@ public class Input {
 
     public boolean isMouseButtonDown(int mouseButton){
         return mouseButtons[mouseButton];
+    }
+
+    public boolean isMouseButtonPressed(int mouseButton){
+        return mouseButtons[mouseButton]&&!mouseButtonsAllreadyPressed[mouseButton];
     }
 
     public int[] getMousePos(){

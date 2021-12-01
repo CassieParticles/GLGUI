@@ -1,8 +1,6 @@
-package GUIObjects;
+package guiObjects;
 
 import org.joml.Vector2f;
-import org.joml.Vector2i;
-import rendering.Program;
 
 public class GUI {
 

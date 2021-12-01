@@ -1,7 +1,7 @@
-package GUIObjects;
+package guiObjects;
 
+import com.sun.deploy.util.StringUtils;
 import org.joml.Vector2f;
-import rendering.Program;
 
 public class TextGUI extends GUI{
     private Font font;
@@ -30,11 +30,34 @@ public class TextGUI extends GUI{
             characters[i]=new CharacterGUI(new Vector2f(currentPos,position.y),new Vector2f(font.getCharacterWidth(string.toCharArray()[i]),font.getHeight()),font,new Vector2f(characterInfo[0],characterInfo[1]), new Vector2f(characterInfo[2],characterInfo[3]));
             currentPos+=font.getCharacterWidth(string.toCharArray()[i]);
         }
+        if(characters.length==0){
+            characters=new CharacterGUI[1];
+            float[] characterInfo=font.genCharacter(' ');
+            characters[0]=new CharacterGUI(new Vector2f(currentPos,position.y),new Vector2f(font.getCharacterWidth(' '),font.getHeight()),font,new Vector2f(characterInfo[0],characterInfo[1]), new Vector2f(characterInfo[2],characterInfo[3]));
+        }
     }
 
     public void changeText(String newText){
         if(!newText.equalsIgnoreCase(string)){
-            string=newText;
+            if(newText.length()<=maxLength){
+                string=newText;
+            }else{
+                string=newText.substring(0,maxLength-1);
+            }
+        }
+    }
+
+    public void addChar(char c){
+        if(string.length()<maxLength){
+            string=string.concat(String.valueOf(c));
+        }
+    }
+
+    public void backSpace(){
+        char[] chars=string.toCharArray();
+        string="";
+        for(int i=0;i<chars.length-1;i++) {
+            string+=String.valueOf(chars[i]);
         }
     }
 

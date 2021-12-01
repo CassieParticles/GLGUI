@@ -1,13 +1,12 @@
-package GUIObjects;
+package guiObjects;
 
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL46;
-import rendering.Mesh;
 import rendering.Program;
 import rendering.RectangleMesh;
 import rendering.Shader;
+import utils.FileHandling;
 
 public class RectangleGUI extends GUI{
 
@@ -30,8 +29,8 @@ public class RectangleGUI extends GUI{
         if(program==null){
             program=new Program();
             program.attachShaders(new Shader[]{
-                    new Shader("src/shaders/rectangle/vertex.glsl", GL46.GL_VERTEX_SHADER),
-                    new Shader("src/shader/rectangle/fragment.glsl",GL46.GL_FRAGMENT_SHADER)
+                    new Shader(FileHandling.loadResource("src/shaders/rectangle/vertex.glsl"), GL46.GL_VERTEX_SHADER),
+                    new Shader(FileHandling.loadResource("src/shaders/rectangle/fragment.glsl"),GL46.GL_FRAGMENT_SHADER)
             });
             program.link();
             program.createUniform("screenSize");
@@ -40,7 +39,7 @@ public class RectangleGUI extends GUI{
             program.createUniform("colour");
         }
 
-        this.colour=colour;
+        this.colour=new Vector3f(colour);
     }
 
     public boolean pointInRectangle(Vector2f point){
@@ -53,12 +52,14 @@ public class RectangleGUI extends GUI{
 
     @Override
     public void render( Vector2f screenSize){
+        program.useProgram();
         program.setUniform("screenSize",screenSize);
         program.setUniform("translation",position);
         program.setUniform("scale",size);
         program.setUniform("colour",colour);
         super.render(screenSize);
         mesh.render(screenSize);
+        program.unlinkProgram();
     }
 
     @Override

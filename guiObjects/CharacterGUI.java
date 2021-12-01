@@ -1,9 +1,8 @@
-package GUIObjects;
+package guiObjects;
 
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL46;
 import rendering.Program;
-import rendering.RectangleMesh;
 import rendering.Shader;
 import rendering.TextureMesh;
 import utils.FileHandling;
