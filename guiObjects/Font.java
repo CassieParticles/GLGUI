@@ -1,13 +1,13 @@
 package guiObjects;
 
-import rendering.Texture2D;
+import rendering.Texture;
 import utils.FileHandling;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Font {
-    private Texture2D fontSheet;
+    private Texture fontSheet;
     private int columns;    //How many characters wide the sheet is
     private int rows;       //How many characters tall the sheet is
 
@@ -16,7 +16,7 @@ public class Font {
     private Map<Integer,Integer> charWidth;
 
     public Font(String fontDir,String fontCSVDir, int columns, int rows) throws Exception {
-        fontSheet=new Texture2D(fontDir);
+        fontSheet=new Texture(fontDir);
         charWidth=new HashMap<Integer,Integer>();
         this.columns=columns;
         this.rows=rows;
@@ -34,7 +34,7 @@ public class Font {
         }
     }
 
-    public Texture2D getFontSheet(){
+    public Texture getFontSheet(){
         return fontSheet;
     }
 

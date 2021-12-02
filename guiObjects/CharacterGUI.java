@@ -12,6 +12,27 @@ public class CharacterGUI extends GUI{
     private final Font font;
     private static Program program=null;
 
+    private static final String vertexShaderCode="#version 330 \n" +
+            "layout(location=0) in vec2 position;\n" +
+            "layout(location=1) in vec2 textureCoords;\n" +
+            "uniform vec2 translation;\n" +
+            "uniform vec2 scale;\n" +
+            "uniform vec2 screenSize;\n" +
+            "out vec2 fragTextCoords;\n" +
+            "void main() {\n" +
+            "    vec2 scaledPos=(position*scale+translation)*2/screenSize;\n" +
+            "    gl_Position=vec4(scaledPos,0,1);\n" +
+            "    fragTextCoords=textureCoords;\n" +
+            "}";
+
+    private static final String fragmentShaderCode="#version 330\n" +
+            "in vec2 fragTextCoords;\n" +
+            "uniform sampler2D textureSampler;\n" +
+            "out vec4 FragColour;\n" +
+            "void main() {\n" +
+            "    FragColour=texture(textureSampler,fragTextCoords);\n" +
+            "}\n";
+
     public CharacterGUI(Vector2f position, Vector2f scale,Font font,Vector2f texPos, Vector2f texSize) throws Exception {
         super(position,scale);
         this.font=font;
@@ -33,8 +54,8 @@ public class CharacterGUI extends GUI{
         if(program==null){
             program=new Program();
             program.attachShaders(new Shader[]{
-                    new Shader(FileHandling.loadResource("src/shaders/texture/vertex.glsl"), GL46.GL_VERTEX_SHADER),
-                    new Shader(FileHandling.loadResource("src/shaders/texture/fragment.glsl"),GL46.GL_FRAGMENT_SHADER)
+                    new Shader(vertexShaderCode, GL46.GL_VERTEX_SHADER),
+                    new Shader(fragmentShaderCode,GL46.GL_FRAGMENT_SHADER)
             });
             program.link();
             program.createUniform("translation");

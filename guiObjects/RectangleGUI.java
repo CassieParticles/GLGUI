@@ -13,6 +13,23 @@ public class RectangleGUI extends GUI{
     private static Program program = null;
     private static RectangleMesh mesh = null;   //Move all programs to GUI rather then meshes, to allow them to be passed down easier
 
+    private static final String vertexShaderCode="#version 330\n" +
+            "layout(location=0) in vec2 position;\n" +
+            "uniform vec2 translation;\n" +
+            "uniform vec2 scale;\n" +
+            "uniform vec2 screenSize;\n" +
+            "void main(){\n" +
+            "vec2 scaledPos=(position*scale+translation)*2/screenSize;\n" +
+            "gl_Position=vec4(scaledPos,0,1);\n" +
+            "}";
+
+    private static final String fragmentShaderCode="#version 330\n" +
+            "uniform vec3 colour;\n" +
+            "out vec4 outColour;\n" +
+            "void main(){\n" +
+            "outColour=vec4(colour,1);\n" +
+            "}";
+
     private final Vector3f colour;
 
     public RectangleGUI(Vector2f position,Vector2f size, Vector3f colour) throws Exception{
@@ -29,8 +46,8 @@ public class RectangleGUI extends GUI{
         if(program==null){
             program=new Program();
             program.attachShaders(new Shader[]{
-                    new Shader(FileHandling.loadResource("src/shaders/rectangle/vertex.glsl"), GL46.GL_VERTEX_SHADER),
-                    new Shader(FileHandling.loadResource("src/shaders/rectangle/fragment.glsl"),GL46.GL_FRAGMENT_SHADER)
+                    new Shader(vertexShaderCode, GL46.GL_VERTEX_SHADER),
+                    new Shader(fragmentShaderCode,GL46.GL_FRAGMENT_SHADER)
             });
             program.link();
             program.createUniform("screenSize");

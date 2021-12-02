@@ -21,10 +21,32 @@ public class TextureGUI extends GUI{
             0,1
     };
 
-    private final Texture2D texture;
+    private final Texture texture;
     private final TextureMesh mesh;
     private static Program program=null;
-    public TextureGUI(Vector2f position, Vector2f size, Texture2D image) throws Exception {
+
+    private static final String vertexShaderCode="#version 330 \n" +
+            "layout(location=0) in vec2 position;\n" +
+            "layout(location=1) in vec2 textureCoords;\n" +
+            "uniform vec2 translation;\n" +
+            "uniform vec2 scale;\n" +
+            "uniform vec2 screenSize;\n" +
+            "out vec2 fragTextCoords;\n" +
+            "void main() {\n" +
+            "    vec2 scaledPos=(position*scale+translation)*2/screenSize;\n" +
+            "    gl_Position=vec4(scaledPos,0,1);\n" +
+            "    fragTextCoords=textureCoords;\n" +
+            "}";
+
+    private static final String fragmentShaderCode="#version 330\n" +
+            "in vec2 fragTextCoords;\n" +
+            "uniform sampler2D textureSampler;\n" +
+            "out vec4 FragColour;\n" +
+            "void main() {\n" +
+            "    FragColour=texture(textureSampler,fragTextCoords);\n" +
+            "}\n";
+
+    public TextureGUI(Vector2f position, Vector2f size, Texture image) throws Exception {
         super(position, size);
         this.texture=image;
         mesh=new TextureMesh(vertices,indices,textCoords,image.getId());
@@ -32,8 +54,8 @@ public class TextureGUI extends GUI{
         if(program==null){
             program=new Program();
             program.attachShaders(new Shader[]{
-                    new Shader(FileHandling.loadResource("src/shaders/texture/vertex.glsl"), GL46.GL_VERTEX_SHADER),
-                    new Shader(FileHandling.loadResource("src/shaders/texture/fragment.glsl"),GL46.GL_FRAGMENT_SHADER)
+                    new Shader(vertexShaderCode, GL46.GL_VERTEX_SHADER),
+                    new Shader(fragmentShaderCode,GL46.GL_FRAGMENT_SHADER)
             });
             program.link();
             program.createUniform("translation");
@@ -44,7 +66,7 @@ public class TextureGUI extends GUI{
     }
 
     public TextureGUI(Vector2f position, Vector2f size, String path) throws Exception {
-        this(position,size,new Texture2D(path));
+        this(position,size,new Texture(path));
     }
 
     public boolean pointInRectangle(Vector2f point){
@@ -54,6 +76,8 @@ public class TextureGUI extends GUI{
     @Override
     public void render(Vector2f screenSize){
         super.render(screenSize);
+        program.setUniform("translation",position);
+        program.setUniform("scale",size);
         program.setUniform("screenSize",screenSize);
         program.setUniform("textureSampler",0);
         mesh.render(screenSize);

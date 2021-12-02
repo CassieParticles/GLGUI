@@ -29,7 +29,7 @@ public class TextBoxGUI extends GUI {
     }
 
     public void initText(String initialString, int maxLength, String fontDir, String fontCSVDir, String acceptableCharacters) throws Exception {
-        text=new TextGUI(position,size,initialString,maxLength,fontDir,fontCSVDir);
+        text=new TextGUI(position,size,initialString,maxLength,(int)size.x,fontDir,fontCSVDir);
         this.acceptableCharacters=acceptableCharacters;
     }
 
