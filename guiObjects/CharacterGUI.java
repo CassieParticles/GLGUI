@@ -2,15 +2,14 @@ package guiObjects;
 
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL46;
-import rendering.Program;
-import rendering.Shader;
+import rendering.GUIProgram;
+import rendering.GUIShader;
 import rendering.TextureMesh;
-import utils.FileHandling;
 
 public class CharacterGUI extends GUI{
     private TextureMesh mesh;
     private final Font font;
-    private static Program program=null;
+    private static GUIProgram program=null;
 
     private static final String vertexShaderCode="#version 330 \n" +
             "layout(location=0) in vec2 position;\n" +
@@ -52,10 +51,10 @@ public class CharacterGUI extends GUI{
         },font.getFontSheet().getId());
 
         if(program==null){
-            program=new Program();
-            program.attachShaders(new Shader[]{
-                    new Shader(vertexShaderCode, GL46.GL_VERTEX_SHADER),
-                    new Shader(fragmentShaderCode,GL46.GL_FRAGMENT_SHADER)
+            program=new GUIProgram();
+            program.attachShaders(new GUIShader[]{
+                    new GUIShader(vertexShaderCode, GL46.GL_VERTEX_SHADER),
+                    new GUIShader(fragmentShaderCode,GL46.GL_FRAGMENT_SHADER)
             });
             program.link();
             program.createUniform("translation");
@@ -72,7 +71,6 @@ public class CharacterGUI extends GUI{
         program.setUniform("screenSize",screenSize);
         program.setUniform("translation",position);
         program.setUniform("scale",size);
-        super.render(screenSize);
         mesh.render(screenSize);
     }
 

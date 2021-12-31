@@ -32,14 +32,17 @@ public class TextGUI extends GUI{
         pixelLength =0;
         for(int i=0;i< characters.length;i++){
             float[] characterInfo=font.genCharacter(string.toCharArray()[i]);
-            characters[i]=new CharacterGUI(new Vector2f(currentPos,position.y),new Vector2f(font.getCharacterWidth(string.toCharArray()[i]),font.getHeight()),font,new Vector2f(characterInfo[0],characterInfo[1]), new Vector2f(characterInfo[2],characterInfo[3]));
-            currentPos+=font.getCharacterWidth(string.toCharArray()[i]);
-            pixelLength +=font.getCharacterWidth(string.toCharArray()[i]);
+            characters[i]=new CharacterGUI(new Vector2f(currentPos,position.y),new Vector2f(font.getCharacterWidth(string.toCharArray()[i])*size.x,font.getHeight()*size.y),font,new Vector2f(characterInfo[0],characterInfo[1]), new Vector2f(characterInfo[2],characterInfo[3]));
+            currentPos+=font.getCharacterWidth(string.toCharArray()[i])*size.x;
+            pixelLength +=font.getCharacterWidth(string.toCharArray()[i])*size.x;
+            if(pixelLength>maxPixelLength){
+                break;
+            }
         }
         if(characters.length==0){
             characters=new CharacterGUI[1];
             float[] characterInfo=font.genCharacter(' ');
-            characters[0]=new CharacterGUI(new Vector2f(currentPos,position.y),new Vector2f(font.getCharacterWidth(' '),font.getHeight()),font,new Vector2f(characterInfo[0],characterInfo[1]), new Vector2f(characterInfo[2],characterInfo[3]));
+            characters[0]=new CharacterGUI(new Vector2f(currentPos,position.y),new Vector2f(font.getCharacterWidth(' ')*size.x,font.getHeight()*size.y),font,new Vector2f(characterInfo[0],characterInfo[1]), new Vector2f(characterInfo[2],characterInfo[3]));
         }
     }
 
@@ -54,16 +57,20 @@ public class TextGUI extends GUI{
     }
 
     public void addChar(char c){
-        if(string.length()< maxCharacterLength&&pixelLength+font.getCharacterWidth(c)<maxPixelLength){
+        if(string.length()< maxCharacterLength&&pixelLength+font.getCharacterWidth(c)*size.x<maxPixelLength){
             string=string.concat(String.valueOf(c));
+            pixelLength+=font.getCharacterWidth(c)*size.x;
         }
     }
 
     public void backSpace(){
-        char[] chars=string.toCharArray();
-        string="";
-        for(int i=0;i<chars.length-1;i++) {
-            string+=String.valueOf(chars[i]);
+        if(string.length()!=0){
+            char[] chars=string.toCharArray();
+            string="";
+            for(int i=0;i<chars.length-1;i++) {
+                string+=String.valueOf(chars[i]);
+            }
+            pixelLength-=font.getCharacterWidth(chars[chars.length-1])*size.x;
         }
     }
 
@@ -78,7 +85,10 @@ public class TextGUI extends GUI{
     @Override
     public void render(Vector2f screenSize){
         for(CharacterGUI c : characters){
-            c.render( screenSize);
+            if(c!=null){
+                c.render( screenSize);
+            }
+
         }
     }
 
@@ -87,7 +97,14 @@ public class TextGUI extends GUI{
     public void cleanup(){
         font.cleanup();
         for(CharacterGUI c : characters){
-            c.cleanup();
+            if (c != null) {
+                c.cleanup();
+            }
         }
+    }
+
+    @Override
+    public String toString(){
+        return this.string;
     }
 }

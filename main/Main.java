@@ -45,10 +45,10 @@ public class Main {
         input=new Input();
 
         window.init();
-        input.init(window);
+        input.init(window.getWindowHandle());
 
-        testText1=new TextGUI(new Vector2f(0,0),new Vector2f(1,1),"Question?",15,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
-        testText2=new TextGUI(new Vector2f(0,-25),new Vector2f(1,1),"Answer!",15,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
+        testText1=new TextGUI(new Vector2f(0,0),new Vector2f(1,1),"Question?",15,150,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
+        testText2=new TextGUI(new Vector2f(0,-25),new Vector2f(1,1),"Answer!",15,150,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
 
 //        buttonTest=new ButtonGUI(new Vector2f(50, 50), new Vector2f(200, 100), new Vector3f(0.3f, 0.2f, 0.8f), input, new ButtonAction() {
 //            @Override

@@ -29,7 +29,7 @@ public class TextBoxGUI extends GUI {
     }
 
     public void initText(String initialString, int maxLength, String fontDir, String fontCSVDir, String acceptableCharacters) throws Exception {
-        text=new TextGUI(position,size,initialString,maxLength,(int)size.x,fontDir,fontCSVDir);
+        text=new TextGUI(position,new Vector2f(1,1),initialString,maxLength,(int)size.x,fontDir,fontCSVDir);
         this.acceptableCharacters=acceptableCharacters;
     }
 
@@ -70,7 +70,6 @@ public class TextBoxGUI extends GUI {
 
     @Override
     public void render(Vector2f screenSize) {
-        super.render(screenSize);
         bgRect.render(screenSize);
         text.render(screenSize);
     }
@@ -79,5 +78,10 @@ public class TextBoxGUI extends GUI {
     public void cleanup(){
         bgRect.cleanup();
         text.cleanup();
+    }
+
+    @Override
+    public String toString() {
+        return this.text.toString();
     }
 }

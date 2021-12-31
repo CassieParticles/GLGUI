@@ -3,7 +3,6 @@ package guiObjects;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL46;
 import rendering.*;
-import utils.FileHandling;
 
 public class TextureGUI extends GUI{
     private static float[] vertices=new float[]{0,1,
@@ -23,7 +22,7 @@ public class TextureGUI extends GUI{
 
     private final Texture texture;
     private final TextureMesh mesh;
-    private static Program program=null;
+    private static GUIProgram program=null;
 
     private static final String vertexShaderCode="#version 330 \n" +
             "layout(location=0) in vec2 position;\n" +
@@ -46,16 +45,23 @@ public class TextureGUI extends GUI{
             "    FragColour=texture(textureSampler,fragTextCoords);\n" +
             "}\n";
 
+    /**
+     * sus sus haha
+     * @param position Position, in pixels
+     * @param size Size, in pixels
+     * @param image The texture that will be rendered
+     * @throws Exception
+     */
     public TextureGUI(Vector2f position, Vector2f size, Texture image) throws Exception {
         super(position, size);
         this.texture=image;
         mesh=new TextureMesh(vertices,indices,textCoords,image.getId());
 
         if(program==null){
-            program=new Program();
-            program.attachShaders(new Shader[]{
-                    new Shader(vertexShaderCode, GL46.GL_VERTEX_SHADER),
-                    new Shader(fragmentShaderCode,GL46.GL_FRAGMENT_SHADER)
+            program=new GUIProgram();
+            program.attachShaders(new GUIShader[]{
+                    new GUIShader(vertexShaderCode, GL46.GL_VERTEX_SHADER),
+                    new GUIShader(fragmentShaderCode,GL46.GL_FRAGMENT_SHADER)
             });
             program.link();
             program.createUniform("translation");
@@ -65,6 +71,13 @@ public class TextureGUI extends GUI{
         }
     }
 
+    /**
+     * sus sus haha
+     * @param position Position, in pixels
+     * @param size Size, in pixels
+     * @param path The path to the texture to be rendered
+     * @throws Exception
+     */
     public TextureGUI(Vector2f position, Vector2f size, String path) throws Exception {
         this(position,size,new Texture(path));
     }
@@ -75,12 +88,13 @@ public class TextureGUI extends GUI{
 
     @Override
     public void render(Vector2f screenSize){
-        super.render(screenSize);
+        program.useProgram();
         program.setUniform("translation",position);
         program.setUniform("scale",size);
         program.setUniform("screenSize",screenSize);
         program.setUniform("textureSampler",0);
         mesh.render(screenSize);
+        program.detachProgram();
     }
 
     @Override

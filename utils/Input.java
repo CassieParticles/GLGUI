@@ -16,15 +16,15 @@ public class Input {
 
     }
 
-    public void init(Window windowObject){
+    public void init(long windowHandle){
 
-        GLFW.glfwSetKeyCallback(windowObject.getWindowHandle(), (window, key, scancode, action, mods) -> {
+        GLFW.glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
             keys[key]=(action == GLFW.GLFW_PRESS||action==GLFW.GLFW_REPEAT);
         });
-        GLFW.glfwSetMouseButtonCallback(windowObject.getWindowHandle(), (window, button, action, mods) -> {
+        GLFW.glfwSetMouseButtonCallback(windowHandle, (window, button, action, mods) -> {
             mouseButtons[button]=(action== GLFW.GLFW_PRESS||action==GLFW.GLFW_REPEAT);
         });
-        GLFW.glfwSetCursorPosCallback(windowObject.getWindowHandle(), (window,xPos,yPos) -> {
+        GLFW.glfwSetCursorPosCallback(windowHandle, (window,xPos,yPos) -> {
             mouseX=(int)xPos;
             mouseY=(int)yPos;
         });

@@ -3,14 +3,13 @@ package guiObjects;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL46;
-import rendering.Program;
+import rendering.GUIProgram;
 import rendering.RectangleMesh;
-import rendering.Shader;
-import utils.FileHandling;
+import rendering.GUIShader;
 
 public class RectangleGUI extends GUI{
 
-    private static Program program = null;
+    private static GUIProgram program = null;
     private static RectangleMesh mesh = null;   //Move all programs to GUI rather then meshes, to allow them to be passed down easier
 
     private static final String vertexShaderCode="#version 330\n" +
@@ -44,10 +43,10 @@ public class RectangleGUI extends GUI{
                 0,2,3
         });
         if(program==null){
-            program=new Program();
-            program.attachShaders(new Shader[]{
-                    new Shader(vertexShaderCode, GL46.GL_VERTEX_SHADER),
-                    new Shader(fragmentShaderCode,GL46.GL_FRAGMENT_SHADER)
+            program=new GUIProgram();
+            program.attachShaders(new GUIShader[]{
+                    new GUIShader(vertexShaderCode, GL46.GL_VERTEX_SHADER),
+                    new GUIShader(fragmentShaderCode,GL46.GL_FRAGMENT_SHADER)
             });
             program.link();
             program.createUniform("screenSize");
@@ -64,6 +63,7 @@ public class RectangleGUI extends GUI{
     }
 
     public void setColour(Vector3f colour){
+        GL46.glBindVertexArray(0);
         this.colour.set(colour);
     }
 
@@ -74,9 +74,8 @@ public class RectangleGUI extends GUI{
         program.setUniform("translation",position);
         program.setUniform("scale",size);
         program.setUniform("colour",colour);
-        super.render(screenSize);
         mesh.render(screenSize);
-        program.unlinkProgram();
+        program.detachProgram();
     }
 
     @Override

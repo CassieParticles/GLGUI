@@ -3,11 +3,10 @@ package rendering;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL46;
 import org.lwjgl.system.MemoryUtil;
-import utils.FileHandling;
 
 import java.nio.FloatBuffer;
 
-public class TextureMesh extends Mesh{
+public class TextureMesh extends GUIMesh {
     private int textureVboId;
     private int textureId;
 
