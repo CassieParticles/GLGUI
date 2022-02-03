@@ -111,6 +111,8 @@ public class Main {
         textBox.cleanup();
 
         window.cleanup();
+        
+        Font.cleanupFonts();
     }
 
 }

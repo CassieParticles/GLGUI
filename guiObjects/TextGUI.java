@@ -6,6 +6,7 @@ public class TextGUI extends GUI{
     private Font font;
     private String string;
     private CharacterGUI[] characters;
+    private float[] offsets;
     private int pixelLength;
 
     private int maxCharacterLength;
@@ -14,37 +15,35 @@ public class TextGUI extends GUI{
     public TextGUI(Vector2f position, Vector2f scale,String string, int maxCharacterLength,int maxPixelLength, String fontDir, String fontCSVDir) throws Exception {
         super(position,scale);
         this.string=string;
-        this.font=new Font(fontDir,fontCSVDir,16,16);
-        this.maxCharacterLength =maxCharacterLength;
+        this.font=Font.getFont(fontDir,fontCSVDir,16,16);
+        this.maxCharacterLength=maxCharacterLength;
         this.maxPixelLength=maxPixelLength;
         this.pixelLength=0;
         generateText();
     }
 
     public void generateText() throws Exception {
-        if(characters!=null){
-            for(CharacterGUI c:characters){
-                c.cleanup();
-            }
-        }
         characters=new CharacterGUI[Math.min(string.length(), maxCharacterLength)];
-        float currentPos= position.x;
+        offsets=new float[characters.length];
+        float currentPos=position.x;
         pixelLength =0;
         for(int i=0;i< characters.length;i++){
-            float[] characterInfo=font.genCharacter(string.toCharArray()[i]);
-            characters[i]=new CharacterGUI(new Vector2f(currentPos,position.y),new Vector2f(font.getCharacterWidth(string.toCharArray()[i])*size.x,font.getHeight()*size.y),font,new Vector2f(characterInfo[0],characterInfo[1]), new Vector2f(characterInfo[2],characterInfo[3]));
-            currentPos+=font.getCharacterWidth(string.toCharArray()[i])*size.x;
-            pixelLength +=font.getCharacterWidth(string.toCharArray()[i])*size.x;
+        	char c=string.toCharArray()[i];
+            characters[i]=font.getChar(c);
+            offsets[i]=pixelLength;
+            currentPos+=font.getCharacterWidth(c)*size.x;
+            pixelLength+=font.getCharacterWidth(c)*size.x;
             if(pixelLength>maxPixelLength){
                 break;
             }
         }
+        
         if(characters.length==0){
             characters=new CharacterGUI[1];
-            float[] characterInfo=font.genCharacter(' ');
-            characters[0]=new CharacterGUI(new Vector2f(currentPos,position.y),new Vector2f(font.getCharacterWidth(' ')*size.x,font.getHeight()*size.y),font,new Vector2f(characterInfo[0],characterInfo[1]), new Vector2f(characterInfo[2],characterInfo[3]));
+            offsets=new float[1];
+            characters[0]=font.getChar(' ');
         }
-    }
+   }
 
     public void changeText(String newText){
         if(!newText.equalsIgnoreCase(string)){
@@ -84,9 +83,12 @@ public class TextGUI extends GUI{
 
     @Override
     public void render(Vector2f screenSize){
-        for(CharacterGUI c : characters){
+        for(int i=0;i<characters.length;i++){
+        	CharacterGUI c=characters[i];
             if(c!=null){
-                c.render( screenSize);
+            	c.setPosition(new Vector2f(position).add(new Vector2f(offsets[i],0)));
+            	c.setTextSize(size);
+                c.render(screenSize);
             }
 
         }

@@ -8,8 +8,9 @@ import rendering.TextureMesh;
 
 public class CharacterGUI extends GUI{
     private TextureMesh mesh;
-    private final Font font;
     private static GUIProgram program=null;
+    
+    private Vector2f textSize;
 
     private static final String vertexShaderCode="#version 330 \n" +
             "layout(location=0) in vec2 position;\n" +
@@ -32,9 +33,9 @@ public class CharacterGUI extends GUI{
             "    FragColour=texture(textureSampler,fragTextCoords);\n" +
             "}\n";
 
-    public CharacterGUI(Vector2f position, Vector2f scale,Font font,Vector2f texPos, Vector2f texSize) throws Exception {
-        super(position,scale);
-        this.font=font;
+    public CharacterGUI(Vector2f scale,int fontSheetId,Vector2f texPos, Vector2f texSize) throws Exception {
+        super(new Vector2f(),scale);
+        textSize=new Vector2f(1);
         mesh=new TextureMesh(new float[]{
                 0,1,
                 1,1,
@@ -48,7 +49,7 @@ public class CharacterGUI extends GUI{
                 texPos.x+texSize.x,texPos.y,
                 texPos.x+texSize.x,texPos.y+texSize.y,
                 texPos.x,texPos.y+texSize.y,
-        },font.getFontSheet().getId());
+        },fontSheetId);
 
         if(program==null){
             program=new GUIProgram();
@@ -63,6 +64,10 @@ public class CharacterGUI extends GUI{
             program.createUniform("textureSampler");
         }
     }
+    
+    public void setTextSize(Vector2f textSize) {
+    	this.textSize=textSize;
+    }
 
     @Override
     public void render( Vector2f screenSize){
@@ -70,7 +75,7 @@ public class CharacterGUI extends GUI{
         program.setUniform("textureSampler",0);
         program.setUniform("screenSize",screenSize);
         program.setUniform("translation",position);
-        program.setUniform("scale",size);
+        program.setUniform("scale",new Vector2f(size).mul(textSize));
         mesh.render(screenSize);
     }
 

@@ -6,6 +6,8 @@ import utils.FileHandling;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joml.Vector2f;
+
 public class Font {
     private Texture fontSheet;
     private int columns;    //How many characters wide the sheet is
@@ -14,10 +16,24 @@ public class Font {
     private float characterHeight;
 
     private Map<Integer,Integer> charWidth;
+    private Map<Character, CharacterGUI> generatedCharacters;
+    
+    private static Map<String, Font> fonts=new HashMap<>();
+    
+    public static Font getFont(String fontDir, String fontCSVDir, int columns, int rows) throws Exception{
+    	if(fonts.containsKey(fontDir)){
+    		return fonts.get(fontDir);
+    	}else{
+    		Font font=new Font(fontDir,fontCSVDir, columns, rows);
+    		fonts.put(fontDir,font);
+    		return font;
+    	}
+    }
 
     public Font(String fontDir,String fontCSVDir, int columns, int rows) throws Exception {
         fontSheet=new Texture(fontDir);
-        charWidth=new HashMap<Integer,Integer>();
+        charWidth=new HashMap<>();
+        generatedCharacters=new HashMap<>();
         this.columns=columns;
         this.rows=rows;
         try{
@@ -37,8 +53,21 @@ public class Font {
     public Texture getFontSheet(){
         return fontSheet;
     }
+    
+    public CharacterGUI getChar(char c) throws Exception{
+    	if(generatedCharacters.containsKey(c)){
+    		return generatedCharacters.get(c);
+    	}else{
+    		float[] charInfo=genCharacter(c);
+    		CharacterGUI character=new CharacterGUI(new Vector2f(getCharacterWidth(c),getHeight()),fontSheet.getId(),new Vector2f(charInfo[0],charInfo[1]), new Vector2f(charInfo[2],charInfo[3]));
+    		generatedCharacters.put(c,character);
+    		return character;
+    	}
 
-    public float[] genCharacter(char c){
+    }
+   
+
+    private float[] genCharacter(char c){
         int column=c%rows;
         int row=c/rows;
 
@@ -58,5 +87,18 @@ public class Font {
 
     public void cleanup(){
         fontSheet.cleanup();
+        if(generatedCharacters.size()!=0) {
+        	for(CharacterGUI c:generatedCharacters.values()){
+            	c.cleanup();
+            }
+        }
+    }
+    
+    public static void cleanupFonts(){
+    	if(fonts.size()!=0) {
+    		for(Font f:fonts.values()){
+        		f.cleanup();
+        	}
+    	}
     }
 }
