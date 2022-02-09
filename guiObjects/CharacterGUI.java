@@ -8,8 +8,9 @@ import rendering.TextureMesh;
 
 public class CharacterGUI extends GUI{
     private TextureMesh mesh;
+    private Font font;
     private static GUIProgram program=null;
-    
+
     private Vector2f textSize;
 
     private static final String vertexShaderCode="#version 330 \n" +
@@ -64,7 +65,7 @@ public class CharacterGUI extends GUI{
             program.createUniform("textureSampler");
         }
     }
-    
+
     public void setTextSize(Vector2f textSize) {
     	this.textSize=textSize;
     }

@@ -40,7 +40,7 @@ public class Main {
     }
 
     public void init() throws Exception {
-        window=new Window(600,600,"Title");
+        window=new Window(900,900,"Title");
         timer=new Timer(60,60);
         input=new Input();
 

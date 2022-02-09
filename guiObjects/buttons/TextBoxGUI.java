@@ -8,6 +8,8 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import utils.Input;
 
+import java.util.Locale;
+
 public class TextBoxGUI extends GUI {
 
     private RectangleGUI bgRect;
@@ -30,11 +32,15 @@ public class TextBoxGUI extends GUI {
 
     public void initText(String initialString, int maxLength, String fontDir, String fontCSVDir, String acceptableCharacters) throws Exception {
         text=new TextGUI(position,new Vector2f(1,1),initialString,maxLength,(int)size.x,fontDir,fontCSVDir);
-        this.acceptableCharacters=acceptableCharacters;
+        this.acceptableCharacters=acceptableCharacters.toUpperCase(Locale.ROOT);
     }
 
     public void setSelected(boolean selected){
         this.isSelected=selected;
+    }
+
+    public boolean getSelected(){
+        return isSelected;
     }
 
     public void use(Vector2f screenSize) throws Exception {
