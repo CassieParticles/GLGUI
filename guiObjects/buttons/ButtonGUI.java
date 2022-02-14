@@ -44,7 +44,10 @@ public class ButtonGUI extends GUI {
     }
 
     private void performTask(){
-        action.performAction();
+        if(action!=null){
+            action.performAction();
+        }
+
     }
 
     @Override
