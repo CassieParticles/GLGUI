@@ -21,9 +21,17 @@ public class ButtonGUI extends GUI {
         this.action=action;
     }
 
+    public ButtonGUI(Vector2f position, Vector2f scale, Vector3f colour, Input input) throws Exception{
+        this(position,scale,colour,input,null);
+    }
+
     @Override
     public void render( Vector2f screenSize){
         buttonBg.render(screenSize);
+    }
+
+    public void setAction(ButtonAction action){
+        this.action=action;
     }
 
     public void use(Vector2f screenSize){
