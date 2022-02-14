@@ -6,7 +6,7 @@ import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import utils.Input;
 
-public class ToggleBoxGUI extends GUI {
+public class ToggleButtonGUI extends GUI {
 
     private boolean enabled;
 
@@ -15,7 +15,7 @@ public class ToggleBoxGUI extends GUI {
 
     private Input input;
 
-    public ToggleBoxGUI(Vector2f position, Vector2f size, String enabledTextureFile, String disabledTextureFile, Input input) throws Exception {
+    public ToggleButtonGUI(Vector2f position, Vector2f size, String enabledTextureFile, String disabledTextureFile, Input input) throws Exception {
         super(position, size);
         enabledTexture=new TextureGUI(position,size,enabledTextureFile);
         disabledTexture=new TextureGUI(position,size,disabledTextureFile);

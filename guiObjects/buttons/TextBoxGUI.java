@@ -35,6 +35,11 @@ public class TextBoxGUI extends GUI {
         this.acceptableCharacters=acceptableCharacters.toUpperCase(Locale.ROOT);
     }
 
+    public void setText(String text) throws Exception {
+        this.text.changeText(text);
+        this.text.generateText();
+    }
+
     public void setSelected(boolean selected){
         this.isSelected=selected;
     }
@@ -64,6 +69,10 @@ public class TextBoxGUI extends GUI {
             if(input.isKeyPressed(GLFW.GLFW_KEY_BACKSPACE)){
                 text.backSpace();
                 text.generateText();
+            }else if(input.isKeyPressed(GLFW.GLFW_KEY_ENTER)){
+                setSelected(false);
+                bgRect.setColour(bgUnselectedColour);
+                return;
             }
             for(char c:acceptableCharacters.toCharArray()){
                 if(input.isKeyPressed((int)c)){
