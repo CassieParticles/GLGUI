@@ -22,6 +22,8 @@ public class TextBoxGUI extends GUI {
     private boolean isSelected;
     private String acceptableCharacters;
 
+    boolean initialised;
+
     public TextBoxGUI(Vector2f position, Vector2f size, Vector3f bgUnselectedColour,Vector3f bgSelectedColour, Input input) throws Exception {
         super(position, size);
         this.input = input;
@@ -32,13 +34,23 @@ public class TextBoxGUI extends GUI {
 
     //Must be called before text box is used
     public void initText(String initialString, int maxLength, String fontDir, String fontCSVDir, String acceptableCharacters) throws Exception {
-        text=new TextGUI(position,new Vector2f(1,1),initialString,maxLength,(int)size.x,fontDir,fontCSVDir);    //
-        this.acceptableCharacters=acceptableCharacters.toUpperCase(Locale.ROOT);
+        if(!initialised){
+            text=new TextGUI(position,new Vector2f(1,1),initialString,maxLength,(int)size.x,fontDir,fontCSVDir);    //
+            this.acceptableCharacters=acceptableCharacters.toUpperCase(Locale.ROOT);
+        }else{
+            text.changeText("initialString");
+        }
     }
 
     public void setText(String text) throws Exception {
         this.text.changeText(text);
         this.text.generateText();
+    }
+
+    public void clearFontCharacters(){
+        if(text!=null){
+            text.clearFontCharacters();
+        }
     }
 
     public void setSelected(boolean selected){

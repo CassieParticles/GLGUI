@@ -45,6 +45,10 @@ public class TextGUI extends GUI{
         }
    }
 
+   public void clearFontCharacters(){
+        font.clearCharacters();
+   }
+
     public void changeText(String newText){
         if(!newText.equalsIgnoreCase(string)){
             if(newText.length()<= maxCharacterLength){

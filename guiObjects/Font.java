@@ -50,6 +50,10 @@ public class Font {
         }
     }
 
+    public void clearCharacters(){
+        generatedCharacters.clear();
+    }
+
     public Texture getFontSheet(){
         return fontSheet;
     }
