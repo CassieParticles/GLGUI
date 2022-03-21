@@ -14,14 +14,14 @@ public class ButtonGUI extends GUI {
 
     protected ButtonAction action;
 
-    public ButtonGUI(Vector2f position, Vector2f scale, Vector3f colour, Input input, ButtonAction action)throws Exception{
+    public ButtonGUI(Vector2f position, Vector2f scale, Vector3f colour, Input input, ButtonAction action)throws Exception{ //Create button with a buttonAction
         super(position,scale);
         buttonBg=new RectangleGUI(position,scale,colour);
         this.input=input;
         this.action=action;
     }
 
-    public ButtonGUI(Vector2f position, Vector2f scale, Vector3f colour, Input input) throws Exception{
+    public ButtonGUI(Vector2f position, Vector2f scale, Vector3f colour, Input input) throws Exception{ //Create button without a buttonAction
         this(position,scale,colour,input,null);
     }
 
@@ -32,22 +32,27 @@ public class ButtonGUI extends GUI {
 
     public void setAction(ButtonAction action){
         this.action=action;
-    }
+    }   //Set the action of the button at a later date
 
-    public void use(Vector2f screenSize){
+    public void use(Vector2f screenSize){   //Check if the mouse is clicking on the button or not
         int[] mousePosition=input.getMousePos();
-        mousePosition[0]-=screenSize.x/2;
+
+        mousePosition[0]-=screenSize.x/2;   //Transforms mouse position to GUI space
         mousePosition[1]= (int) (mousePosition[1]*-1+screenSize.y/2);
+
         if(buttonBg.pointInRectangle(new Vector2f(mousePosition[0],mousePosition[1]))&&input.isMouseButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)){
             performTask();
         }
     }
 
     private void performTask(){
-        if(action!=null){
+        if(action!=null){   //Prevents error if no button action is set
             action.performAction();
         }
+    }
 
+    public RectangleGUI getBG(){
+        return buttonBg;
     }
 
     @Override

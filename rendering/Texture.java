@@ -60,22 +60,22 @@ public class Texture {
     }
 
     private static int[] loadTexture(String fileName) throws Exception {
-
         int width;
         int height;
         ByteBuffer buf;
         // Load Texture file
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            IntBuffer w = stack.mallocInt(1);
+            IntBuffer w = stack.mallocInt(1);   //Create buffers to recieve texture width, heightm, and channels
             IntBuffer h = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
+            //Loads the texture into a bytebuffer and puts the width, height and channels in other buffers
             buf = STBImage.stbi_load(fileName, w, h, channels, 4);
-            if (buf == null) {
+            if (buf == null) {  //Throw error if texture could not be found
                 throw new Exception("Image file [" + fileName  + "] not loaded: " + STBImage.stbi_failure_reason());
             }
 
-            width = w.get();
+            width = w.get();    //get texture width and height
             height = h.get();
         }
 
@@ -83,16 +83,18 @@ public class Texture {
         int textureId = GL46.glGenTextures();
         GL46.glBindTexture(GL46.GL_TEXTURE_2D, textureId);
 
+        //details how the texture is organised and puts the bytebuffer into the texture object
         GL46.glPixelStorei(GL46.GL_UNPACK_ALIGNMENT, 1);
         GL46.glTexImage2D(GL46.GL_TEXTURE_2D, 0, GL46.GL_RGBA, width, height, 0,
                 GL46.GL_RGBA, GL46.GL_UNSIGNED_BYTE, buf);
 
+        //Generates mipmaps (lower level of detail) textures for the texture
         GL46.glGenerateMipmap(GL46.GL_TEXTURE_2D);
         GL46.glBindTexture(GL46.GL_TEXTURE_2D,0);
 
-        STBImage.stbi_image_free(buf);
+        STBImage.stbi_image_free(buf); //frees up the byte buffer to prevent memory leaks
 
-        return new int[] {textureId,width,height};
+        return new int[] {textureId,width,height};  //Returns all data, packaged into an array
     }
 
 

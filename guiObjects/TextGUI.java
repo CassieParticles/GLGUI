@@ -23,22 +23,22 @@ public class TextGUI extends GUI{
     }
 
     public void generateText() throws Exception {
-        characters=new CharacterGUI[Math.min(string.length(), maxCharacterLength)];
-        offsets=new float[characters.length];
+        characters=new CharacterGUI[Math.min(string.length(), maxCharacterLength)]; //Create array to store characters
+        offsets=new float[characters.length];   //Create array to store character offsets
         float currentPos=position.x;
         pixelLength =0;
         for(int i=0;i< characters.length;i++){
         	char c=string.toCharArray()[i];
-            characters[i]=font.getChar(c);
+            characters[i]=font.getChar(c);  //Get character from font, so optimised method can be used
             offsets[i]=pixelLength;
             currentPos+=font.getCharacterWidth(c)*size.x;
             pixelLength+=font.getCharacterWidth(c)*size.x;
-            if(pixelLength>maxPixelLength){
+            if(pixelLength>maxPixelLength){ //Prevent text being longer then maxPixelLength
                 break;
             }
         }
         
-        if(characters.length==0){
+        if(characters.length==0){   //If empty string is given, prevent size 0 array and null pointers
             characters=new CharacterGUI[1];
             offsets=new float[1];
             characters[0]=font.getChar(' ');
@@ -86,7 +86,7 @@ public class TextGUI extends GUI{
         for(int i=0;i<characters.length;i++){
         	CharacterGUI c=characters[i];
             if(c!=null){
-            	c.setPosition(new Vector2f(position).add(new Vector2f(offsets[i],0)));
+            	c.setPosition(new Vector2f(position).add(new Vector2f(offsets[i],0)));  //Set character position to where it should be
             	c.setTextSize(size);
                 c.render(screenSize);
             }

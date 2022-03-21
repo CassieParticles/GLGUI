@@ -10,8 +10,6 @@ public class TextureMesh extends GUIMesh {
     private int textureVboId;
     private int textureId;
 
-
-
     public TextureMesh(float[] vertices, int[] indices,float[] textureCoords, int textureId){
         super(vertices, indices);
 
@@ -39,15 +37,19 @@ public class TextureMesh extends GUIMesh {
     @Override
     public void render( Vector2f screenSize){
 
-        GL46.glActiveTexture(GL46.GL_TEXTURE0);
+        GL46.glActiveTexture(GL46.GL_TEXTURE0); //Activate the texture port 0 and bind the texture to it
         GL46.glBindTexture(GL46.GL_TEXTURE_2D,textureId);
 
         GL46.glBindVertexArray(getVaoId());
-        GL46.glEnableVertexAttribArray(0);
+
+        GL46.glEnableVertexAttribArray(0);  //Activate vertex buffer objects for position and texture-coordinates
         GL46.glEnableVertexAttribArray(1);
+
         GL46.glDrawElements(GL46.GL_TRIANGLES, getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
-        GL46.glDisableVertexAttribArray(0);
+
+        GL46.glDisableVertexAttribArray(0); //De-activate vertex buffer objects
         GL46.glDisableVertexAttribArray(1);
+
         GL46.glBindVertexArray(0);
     }
 

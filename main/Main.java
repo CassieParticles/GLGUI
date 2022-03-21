@@ -4,8 +4,10 @@ import guiObjects.*;
 import guiObjects.buttons.ButtonAction;
 import guiObjects.buttons.ButtonGUI;
 import guiObjects.buttons.TextBoxGUI;
+import guiObjects.buttons.ToggleButtonGUI;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.system.CallbackI;
 import utils.Input;
 import utils.Timer;
 import org.lwjgl.glfw.GLFW;
@@ -17,12 +19,7 @@ public class Main {
     private Timer timer;
     private Input input;
 
-    private TextGUI testText1;
-    private TextGUI testText2;
-
-    private TextBoxGUI textBox;
-
-    private ButtonGUI buttonTest;
+    private ButtonGUI button;
 
     public static void main(String[] args){
         new Main().gameLoop();
@@ -40,38 +37,29 @@ public class Main {
     }
 
     public void init() throws Exception {
-        window=new Window(900,900,"Title");
+        window=new Window(900,900,"Title"); //Create window, timer and input
         timer=new Timer(60,60);
         input=new Input();
 
-        window.init();
+        window.init();// Initialise window and input
         input.init(window.getWindowHandle());
 
-        testText1=new TextGUI(new Vector2f(0,0),new Vector2f(1,1),"Question?",15,150,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
-        testText2=new TextGUI(new Vector2f(0,-25),new Vector2f(1,1),"Answer!",15,150,"src/testFiles/slabo.png","src/testFiles/slaboData.csv");
+        button=new ButtonGUI(new Vector2f(100, 100), new Vector2f(200, 200), new Vector3f(0.8f, 0.4f, 0), input, new ButtonAction() {
+            @Override
+            public void performAction() {
+                System.out.println("TEST:006");
+            }
+        });
 
-//        buttonTest=new ButtonGUI(new Vector2f(50, 50), new Vector2f(200, 100), new Vector3f(0.3f, 0.2f, 0.8f), input, new ButtonAction() {
-//            @Override
-//            public void performAction() {
-//                System.out.println("Test");
-//            }
-//        });
-
-        textBox=new TextBoxGUI(new Vector2f(50,50),new Vector2f(200,100),new Vector3f(0.3f, 0.2f, 0.8f),new Vector3f(0.69f,0.75f,0.1f), input);
-        textBox.initText("sus",15,"src/testFiles/slabo.png","src/testFiles/slaboData.csv","QWERTYUIOPASDFGHJKLZXCVBNM 0123456789");
-
-        GL46.glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-        window.loop();
+        GL46.glClearColor(0.1f, 0.1f, 0.2f, 1.0f);  //Set the bg colour of the window
+        window.loop();  //Swap buffers to render to screen
     }
 
     private void render(){
         window.loop();
         GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
         Vector2f screenSize=new Vector2f(window.getWidth(),window.getHeight());
-        testText1.render(screenSize);
-        testText2.render(screenSize);
-//        buttonTest.render(screenSize);
-        textBox.render(screenSize);
+        button.render(screenSize);
     }
 
     private void update() throws Exception {
@@ -79,14 +67,9 @@ public class Main {
             window.close();
         }
         Vector2f screenSize=new Vector2f(window.getWidth(),window.getHeight());
-//        buttonTest.use(screenSize);
-        textBox.use(screenSize);
-        String acceptableCharacters="ABCDEFGHIJKLOMNOPQRSTUVWXYZ 0123456789";
-//        for(char c:acceptableCharacters.toCharArray()){
-//            if(input.isKeyPressed((int)c)){
-//                System.out.println(c);
-//            }
-//        }
+
+        button.use(screenSize);
+
         input.updateInputs();
     }
 
@@ -104,13 +87,9 @@ public class Main {
     public void cleanup(){
         System.out.println("Cleaning up");
 
-        testText1.cleanup();
-        testText2.cleanup();
-
-//        buttonTest.cleanup();
-        textBox.cleanup();
-
         window.cleanup();
+
+         button.cleanup();
         
         Font.cleanupFonts();
     }

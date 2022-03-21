@@ -30,8 +30,9 @@ public class TextBoxGUI extends GUI {
         bgRect=new RectangleGUI(position,size,bgUnselectedColour);
     }
 
+    //Must be called before text box is used
     public void initText(String initialString, int maxLength, String fontDir, String fontCSVDir, String acceptableCharacters) throws Exception {
-        text=new TextGUI(position,new Vector2f(1,1),initialString,maxLength,(int)size.x,fontDir,fontCSVDir);
+        text=new TextGUI(position,new Vector2f(1,1),initialString,maxLength,(int)size.x,fontDir,fontCSVDir);    //
         this.acceptableCharacters=acceptableCharacters.toUpperCase(Locale.ROOT);
     }
 
@@ -52,16 +53,20 @@ public class TextBoxGUI extends GUI {
         int[] mousePosition=input.getMousePos();
         mousePosition[0]-=screenSize.x/2;
         mousePosition[1]= (int) (mousePosition[1]*-1+screenSize.y/2);
-        if(input.isMouseButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)){
-            if(bgRect.pointInRectangle(new Vector2f(mousePosition[0],mousePosition[1]))){
+        if(input.isMouseButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)){   //Check if mouse was clicked
+            if(bgRect.pointInRectangle(new Vector2f(mousePosition[0],mousePosition[1]))){   //If the text box was clicked, select it
                 setSelected(true);
                 bgRect.setColour(bgSelectedColour);
-            }else{
+            }else{  //If the user clicks away from the text box, deselect it
                 setSelected(false);
                 bgRect.setColour(bgUnselectedColour);
             }
         }
         detectKeyBoardInputs();
+    }
+
+    public boolean pointInRectangle(Vector2f point){
+        return bgRect.pointInRectangle(point);
     }
 
     private void detectKeyBoardInputs() throws Exception {
@@ -92,7 +97,9 @@ public class TextBoxGUI extends GUI {
     @Override
     public void cleanup(){
         bgRect.cleanup();
-        text.cleanup();
+        if(text!=null){
+            text.cleanup();
+        }
     }
 
     @Override

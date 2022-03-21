@@ -43,10 +43,12 @@ public class ToggleButtonGUI extends GUI {
 
     public void use(Vector2f screenSize){
         int[] mousePosition=input.getMousePos();
-        mousePosition[0]-=screenSize.x/2;
+
+        mousePosition[0]-=screenSize.x/2;   //Transform mouse position into GUI space
         mousePosition[1]= (int) (mousePosition[1]*-1+screenSize.y/2);
+
         if(enabledTexture.pointInRectangle(new Vector2f(mousePosition[0],mousePosition[1]))&&input.isMouseButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)){
-            enabled=!enabled;
+            enabled=!enabled;   //Toggle between enabled and diabled
         }
     }
 

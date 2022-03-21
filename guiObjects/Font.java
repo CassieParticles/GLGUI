@@ -21,10 +21,10 @@ public class Font {
     private static Map<String, Font> fonts=new HashMap<>();
     
     public static Font getFont(String fontDir, String fontCSVDir, int columns, int rows) throws Exception{
-    	if(fonts.containsKey(fontDir)){
+    	if(fonts.containsKey(fontDir)){ //If font for fontsheet has already been generated, return existing font
     		return fonts.get(fontDir);
     	}else{
-    		Font font=new Font(fontDir,fontCSVDir, columns, rows);
+    		Font font=new Font(fontDir,fontCSVDir, columns, rows);  //Generate new font if it doesn't exist yet
     		fonts.put(fontDir,font);
     		return font;
     	}
@@ -55,11 +55,15 @@ public class Font {
     }
     
     public CharacterGUI getChar(char c) throws Exception{
-    	if(generatedCharacters.containsKey(c)){
+    	if(generatedCharacters.containsKey(c)){ //If character already exists, return the generated character
     		return generatedCharacters.get(c);
     	}else{
-    		float[] charInfo=genCharacter(c);
-    		CharacterGUI character=new CharacterGUI(new Vector2f(getCharacterWidth(c),getHeight()),fontSheet.getId(),new Vector2f(charInfo[0],charInfo[1]), new Vector2f(charInfo[2],charInfo[3]));
+    		float[] charInfo=genCharacter(c);   //If character hasn't been generated yet, generate a new character
+    		CharacterGUI character=new CharacterGUI(
+                    new Vector2f(getCharacterWidth(c),getHeight()),
+                    fontSheet.getId(),
+                    new Vector2f(charInfo[0],charInfo[1]),
+                    new Vector2f(charInfo[2],charInfo[3]));
     		generatedCharacters.put(c,character);
     		return character;
     	}
